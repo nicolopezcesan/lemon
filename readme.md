@@ -5,7 +5,6 @@ En el sistema actual (representado en la imagen debajo), existe una base de dato
 
 Esta estructura a su vez tampoco permite escalar por funcionalidad, ya sea para procesamiento del servidor o tamaño/consumo de recursos de la base de datos.
 
-// ------------------------------------------
 
 ## 🔄 SOLUCIÓN IMPLEMENTADA
 
@@ -29,7 +28,6 @@ Esta implementación mejora varios puntos contra la arquitectura actual:
 - Consistencia eventual: Los datos pueden estar temporalmente inconsistentes, pero eventualmente se sincronizarán.
 - Flexibilidad: Fácil de agregar nuevos tipos de transacciones sin modificar la estructura existente.
 
-// ------------------------------------------
 
 ## 📢 SOLUCIÓN ALTERNATIVA (propuesta incremental)
 
@@ -60,7 +58,9 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## For technical testing - Ver readme.topic-messages.md (mensajes para enviar al topic)
+## For technical testing
+
+Ver file "readme.topic-messages.md" con mensajes para enviar al topic desde la consola.
 
 ```bash
 # KAFKA
