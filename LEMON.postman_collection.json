@@ -1,0 +1,54 @@
+{
+	"info": {
+		"_postman_id": "55ca281d-be56-45b4-9e3b-e2eec702dc43",
+		"name": "LEMON",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19677045"
+	},
+	"item": [
+		{
+			"name": "/bill-payments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/operations?transactionType=BILL_PAYMENT_TRANSACTION&userId=0001&accountServiceId=123456",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"operations"
+					],
+					"query": [
+						{
+							"key": "transactionType",
+							"value": "BILL_PAYMENT_TRANSACTION"
+						},
+						{
+							"key": "userId",
+							"value": "0001"
+						},
+						{
+							"key": "accountServiceId",
+							"value": "123456",
+							"description": "123456/789012/345678"
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
