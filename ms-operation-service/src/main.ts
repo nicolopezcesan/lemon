@@ -1,31 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices'
-import { HttpException, RpcExceptionFilter, ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices'
+import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './operation/infraestructure/interceptors/response.interceptor';
-
-// TODO: pass to .env
-const KAFKA_BROKER = 'localhost:29092';
-const KAFKA_CONSUMER_GROUP_ID = 'operation-consumer';
-const PORT = 3001;
-
-const kafkaConfig = {
-  client: {
-    brokers: [KAFKA_BROKER],
-  },
-  consumer: {
-    groupId: KAFKA_CONSUMER_GROUP_ID,
-  }
-};
+import { ConfigService } from '@nestjs/config';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, { cors: true });
+  const configService = app.get(ConfigService)
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(
+    configService.get<string>('API_PREFIX')
+  );
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
-    options: kafkaConfig,
+    options: {
+      client: {
+        brokers: [configService.get<string>('KAFKA_BROKER')],
+      },
+      consumer: {
+        groupId: configService.get<string>('KAFKA_CONSUMER_GROUP_ID'),
+      }
+    },
   });
 
   app.useGlobalPipes(
@@ -35,9 +32,14 @@ const bootstrap = async () => {
     }),
   );
 
-  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalInterceptors(
+    new ResponseInterceptor()
+  );
 
-  await Promise.all([app.startAllMicroservices(), app.listen(PORT)]);
+  await Promise.all([
+    app.startAllMicroservices(),
+    app.listen(configService.get<number>('API_PORT')),
+  ]);
 }
 
 bootstrap();
