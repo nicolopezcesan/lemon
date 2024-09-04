@@ -10,16 +10,20 @@ import { SwapOperation, SwapOperationSchema } from './infraestructure/schemas/sw
 import { WithdrawalOperation, WithdrawalOperationSchema } from './infraestructure/schemas/withdrawal-operation.schema';
 import { CreateOperationApp } from './application/create-operation/create-operation.application';
 import { GetOperationsApp } from './application/get-operations/get-operations.application';
+import { ConfigService } from '@nestjs/config';
+import { CacheModule } from 'src/cache/cache.module';
 
-// TODO: pass to .env
-const MONGO_HOST = 'mongodb://localhost:27017';
-const MONGO_DB_NAME = 'lemon';
-const MONGO_OPERATION_COLLECTION_NAME = 'operation'
+const MONGO_OPERATION_COLLECTION_NAME = 'operation';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(MONGO_HOST, {
-      dbName: MONGO_DB_NAME,
+    CacheModule,
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_DB_HOST'),
+        dbName: configService.get<string>('MONGO_DB_NAME'),
+      }),
     }),
     MongooseModule.forFeature([
       {
@@ -47,7 +51,7 @@ const MONGO_OPERATION_COLLECTION_NAME = 'operation'
   providers: [
     // services
     OperationService,
-    // factories
+    // repositories
     OperationRepository,
     OperationModelFactory,
     // applications
